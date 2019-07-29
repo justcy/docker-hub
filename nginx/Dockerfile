@@ -1,4 +1,4 @@
-FROM nginx: alpine
+FROM nginx:alpine
 
 MAINTAINER justcy(https://github.com/justcy)
 
