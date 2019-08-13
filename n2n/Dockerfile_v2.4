@@ -5,4 +5,4 @@ ARG N2N="https://github.com/ntop/n2n"
 ENV ALPINE_TOOLS="openssl-dev build-base make git cmake gcc libc-dev bsd-compat-headers linux-headers musl-dev"
 
 
-RUN apk add $ALPINE_TOOLS && git clone $N2N && cd /n2n && make && make install && apk del $ALPINE_TOOLS && rm -rf /n2n    
+RUN apk add $ALPINE_TOOLS && git clone $N2N && cd /n2n && ./autogen.sh && ./configure && make && make install && apk del $ALPINE_TOOLS && rm -rf /n2n    
