@@ -1,0 +1,30 @@
+FROM php-test
+COPY patches/libhashkit-common.h.patch /libhashkit-common.h.patch
+COPY patches/libtest-cmdline.cc.patch /libtest-cmdline.cc.patch
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ util-linux-dev boost-dev gperf  libevent libevent-dev $PHPIZE_DEPS \
+	&& curl -fsSL 'https://github.com/gearman/gearmand/releases/download/1.1.18/gearmand-1.1.18.tar.gz' -o gearman-1.1.18.tar.gz \
+    && mkdir -p gearman-1.1.18 \
+    && tar -xf gearman-1.1.18.tar.gz -C gearman-1.1.18 --strip-components=1 \
+    && rm gearman-1.1.18.tar.gz \
+    && ( \
+        cd gearman-1.1.18 \
+        && patch -p1 < /libhashkit-common.h.patch \
+		&& patch -p1 < /libtest-cmdline.cc.patch \
+        && ./configure \
+        && make \
+        && make install \
+    ) \
+    && rm -r gearman-1.1.18 \
+    && curl -fsSL 'http://pecl.php.net/get/gearman-1.1.2.tgz' -o gearman.tar.gz \
+    && mkdir -p gearman \
+    && tar -xf gearman.tar.gz -C gearman --strip-components=1 \
+    && rm gearman.tar.gz \
+    && ( \
+        cd gearman \
+        && phpize \
+        && ./configure --enable-gearman \
+        && make \
+        && make install \
+    ) \
+    && rm -r gearman \
+    && docker-php-ext-enable gearman \
