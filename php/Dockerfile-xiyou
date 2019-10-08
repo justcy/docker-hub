@@ -1,8 +1,9 @@
 FROM justcy/php:5.6.40-fpm-alpine
 COPY patches/libhashkit-common.h.patch /libhashkit-common.h.patch
 COPY patches/libtest-cmdline.cc.patch /libtest-cmdline.cc.patch
-ENV ALPINE_TOOLS="util-linux-dev boost-dev gperf  libevent libevent-dev $PHPIZE_DEPS"
-RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $ALPINE_TOOLS \
+ENV REQUER="util-linux-dev"
+ENV ALPINE_TOOLS="boost-dev gperf  libevent libevent-dev $PHPIZE_DEPS"
+RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
 	&& curl -fsSL 'https://github.com/gearman/gearmand/releases/download/1.1.18/gearmand-1.1.18.tar.gz' -o gearman-1.1.18.tar.gz \
     && mkdir -p gearman-1.1.18 \
     && tar -xf gearman-1.1.18.tar.gz -C gearman-1.1.18 --strip-components=1 \
@@ -16,6 +17,7 @@ RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpineli
         && make install \
     ) \
     && rm -r gearman-1.1.18 \
+    && rm /*.patch \
     && curl -fsSL 'http://pecl.php.net/get/gearman-1.1.2.tgz' -o gearman.tar.gz \
     && mkdir -p gearman \
     && tar -xf gearman.tar.gz -C gearman --strip-components=1 \
@@ -29,5 +31,5 @@ RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpineli
     ) \
     && rm -r gearman \
     && docker-php-ext-enable gearman \
-    && apk del $ALPINE_TOOLS \ 
+    && apk del $ALPINE_TOOLS $PHPIZE_DEPS \ 
     && apk del .build-deps
