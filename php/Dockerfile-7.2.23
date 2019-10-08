@@ -1,0 +1,15 @@
+from php:7.2.23-fpm-alpine
+MAINTAINER justcy(https://github.com/justcy)
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update \ 
+&& apk add --no-cache ca-certificates tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ENV ALPINE_TOOLS="autoconf gnu-libiconv libpng tzdata libpng-dev libmcrypt-dev libxml2 libxml2-dev libmemcached-dev zlib-dev"
+ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc mcrypt zip"
+RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $ALPINE_TOOLS $PHPIZE_DEPS \
+	&& docker-php-ext-install $PHP_EXT \
+	&& pecl install redis-4.0.1 memcached-2.2.0 memcache\
+	&& docker-php-ext-enable redis \
+	&& docker-php-ext-enable memcached \
+	&& docker-php-ext-enable memcache \
+    && apk del $ALPINE_TOOLS \ 
+    && apk del .build-deps	
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
