@@ -1,7 +1,8 @@
 FROM justcy/php:5.6.40-fpm-alpine
 COPY patches/libhashkit-common.h.patch /libhashkit-common.h.patch
 COPY patches/libtest-cmdline.cc.patch /libtest-cmdline.cc.patch
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ util-linux-dev boost-dev gperf  libevent libevent-dev $PHPIZE_DEPS \
+ENV ALPINE_TOOLS="util-linux-dev boost-dev gperf  libevent libevent-dev $PHPIZE_DEPS"
+RUN apk add --no-cache --virtual .build-deps --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $ALPINE_TOOLS \
 	&& curl -fsSL 'https://github.com/gearman/gearmand/releases/download/1.1.18/gearmand-1.1.18.tar.gz' -o gearman-1.1.18.tar.gz \
     && mkdir -p gearman-1.1.18 \
     && tar -xf gearman-1.1.18.tar.gz -C gearman-1.1.18 --strip-components=1 \
@@ -28,3 +29,5 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
     ) \
     && rm -r gearman \
     && docker-php-ext-enable gearman \
+    && apk del $ALPINE_TOOLS \ 
+    && apk del .build-deps
