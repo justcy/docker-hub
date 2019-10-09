@@ -7,7 +7,7 @@ ENV ALPINE_TOOLS="gnu-libiconv libpng tzdata libxml2 libxml2-dev zlib-dev $PHPIZ
 ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc mcrypt zip"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
 	&& docker-php-ext-install $PHP_EXT \
-	&& pecl install redis-5.0.2 memcached-3.1.4 memcache-2.2.7 \
+	&& pecl install redis-4.3.0 memcached-3.1.4 memcache-2.2.7 \
 	&& docker-php-ext-enable redis memcached memcache \
 	&& apk del $ALPINE_TOOLS
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
