@@ -11,3 +11,4 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
 	&& docker-php-ext-enable amqp redis memcached \
     && apk del $ALPINE_TOOLS
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
