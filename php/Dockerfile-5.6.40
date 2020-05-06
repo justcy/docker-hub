@@ -8,7 +8,7 @@ ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc mcrypt zip"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
 	&& docker-php-ext-install $PHP_EXT \
 	&& pecl install amqp-1.9.4 redis-4.3.0 memcached-2.2.0 memcache-2.2.7 mogodb-1.7.4 \
-	&& docker-php-ext-enable amqp redis memcached memcache \
+	&& docker-php-ext-enable amqp redis memcached memcache mogodb \
 	&& apk del $ALPINE_TOOLS
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
