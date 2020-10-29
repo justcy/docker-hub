@@ -9,6 +9,8 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
 	&& docker-php-ext-install $PHP_EXT \
 	&& pecl install amqp-1.9.4 redis-5.0.2 memcached-3.1.4 mongodb-1.7.4\
 	&& docker-php-ext-enable amqp redis memcached mongodb \
-    && apk del $ALPINE_TOOLS
+    && apk del $ALPINE_TOOLS \
+    && curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
