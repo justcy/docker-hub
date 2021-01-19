@@ -1,0 +1,14 @@
+from phpswoole/swoole:php7.4-alpine
+MAINTAINER justcy(https://github.com/justcy)
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update \ 
+&& apk add --no-cache ca-certificates tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ENV REQUER="gnu-libiconv libpng-dev libmcrypt-dev libmemcached-dev libxml2-dev rabbitmq-c-dev libzip-dev libzip"
+ENV ALPINE_TOOLS="libpng tzdata zlib-dev libxml2 $PHPIZE_DEPS libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev"
+ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc zip"
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
+	&& docker-php-ext-install $PHP_EXT \
+	&& pecl install amqp-1.9.4 redis-5.0.2 memcached-3.1.4 mongodb-1.7.4\
+	&& docker-php-ext-enable amqp redis memcached mongodb \
+    && apk del $ALPINE_TOOLS
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
