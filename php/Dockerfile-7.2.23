@@ -4,7 +4,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 && apk add --no-cache ca-certificates tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 ENV REQUER="gnu-libiconv libpng-dev libmcrypt-dev libmemcached-dev libxml2-dev rabbitmq-c-dev"
 ENV ALPINE_TOOLS="libpng tzdata zlib-dev libxml2 $PHPIZE_DEPS libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev"
-ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc zip"
+ENV PHP_EXT="pdo_mysql gd bcmath  mysqli shmop soap sockets xmlrpc zip pcntl"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
 	&& docker-php-ext-install $PHP_EXT \
 	&& docker-php-source extract \
