@@ -2,10 +2,10 @@ FROM centos:centos7.4.1708
 
 MAINTAINER justcy
 
-RUN yum -y --nogpgcheck install gcc gcc-c++ kernel-devel make cmake  libstdc++-devel libstdc++-static \
+RUN yum -y --nogpgcheck install gcc gcc-c++ gdb rsync kernel-devel make cmake automake libstdc++-devel libstdc++-static \
 && yum -y --nogpgcheck install openssl-devel gperftools-libs \
 && yum -y --nogpgcheck install psmisc openssh-server sudo epel-release \
-&& yum -y --nogpgcheck install vim git ctags \
+&& yum -y --nogpgcheck install vim tar git ctags \
 && echo "root:develop" | chpasswd \
 && sed -ri 's/^#PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config \
 && sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config \
