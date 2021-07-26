@@ -1,5 +1,5 @@
 FROM alpine:latest
-ENV ETCD_VER=v3.3.18
+ENV ETCD_VER=v3.5.0
 ENV ALPINE_TOOLS="ca-certificates openssl tar"
 RUN apk add $ALPINE_TOOLS && \
     wget https://github.com//etcd-io/etcd/releases/download/$ETCD_VER/etcd-$ETCD_VER-linux-amd64.tar.gz && \
