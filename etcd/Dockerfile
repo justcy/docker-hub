@@ -8,6 +8,7 @@ RUN apk add $ALPINE_TOOLS && \
     apk del --purge $ALPINE_TOOLS && \
     rm -rf etcd-$ETCD_VER-linux-amd64* /var/cache/apk/*
 VOLUME      /data
-EXPOSE      2379 2380
+EXPOSE      2379 2380 4001 7001
 ADD         run.sh /bin/run.sh
-ENTRYPOINT  ["su /bin/run.sh"]
+ENTRYPOINT  ["/bin/sh", "/bin/run.sh"]
+ 
