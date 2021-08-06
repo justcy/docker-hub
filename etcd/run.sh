@@ -23,8 +23,8 @@ else
         echo "Detected new PEER_URLS value of $ETCD_ADVERTISE_CLIENT_URLS"
 fi
 
-#ETCD_CMD="/bin/etcd -data-dir=/data --advertise-client-urls=${ETCD_ADVERTISE_CLIENT_URLS}  -initial-advertise-peer-urls -listen-peer-urls=${PEER_URLS} -listen-client-urls=${CLIENT_URLS} $*"
-ETCD_CMD="/bin/etcd -data-dir=/data $*"
+ETCD_CMD="/bin/etcd -data-dir=/data --advertise-client-urls=${ETCD_ADVERTISE_CLIENT_URLS} --listen-peer-urls=${PEER_URLS} --listen-client-urls=${CLIENT_URLS} $*"
+#ETCD_CMD="/bin/etcd -data-dir=/data $*"
 echo -e "Running '$ETCD_CMD'\nBEGIN ETCD OUTPUT\n"
 
 exec $ETCD_CMD
