@@ -1,0 +1,23 @@
+# 04-pv-local.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-local
+spec:
+  capacity:
+    storage: 25Gi
+  volumeMode: Filesystem #这个其实都可以不用写，因为默认就是filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: /data/k8s/localpv  # node1节点上的目录,这个提前要在node1创建好
+  nodeAffinity: #注意：因为pv这里写了node亲和性，你pod想要使用我，那么你就需要先调度到这个node1节点才行，且pod那里不用再写nodeSelector了；
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node1

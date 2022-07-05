@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitlab-pvc
+  namespace: devops
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: gitlab-ds
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: my-gitlab
+  template:
+    metadata:
+      labels: 
+        app: my-gitlab
+    spec:
+      volumes:
+        - name: gitlab-data
+          persistentVolumeClaim:
+            claimName: gitlab-pvc
+        # - name: gitlab-config
+        #   persistentVolumeClaim:
+        #     claimName: gitlab-pvc
+        # - name: gitlab-logs
+        #   persistentVolumeClaim:
+        #     claimName: gitlab-pvc
+      containers:
+      - name: gitlab
+        image: gitlab/gitlab-ce:latest
+        ports:
+          - name: http
+            containerPort: 80
+          - name: ssh
+            containerPort: 22
+        volumeMounts:
+          - name: gitlab-data
+            mountPath: "/var/opt/gitlab"
+          # - name: gitlab-logs
+          #   mountPath: "/var/log/gitlab"
+          # - name: gitlab-config
+          #   mountPath: "/etc/gitlab"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-svc
+  namespace: devops
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 30001
+    - name: ssh
+      port: 22
+      targetPort: ssh
+  selector:
+    app: my-gitlab
