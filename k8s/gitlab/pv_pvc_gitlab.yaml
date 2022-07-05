@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-pv
+  name: gitlab
 spec:
   capacity:
-    storage: 5Gi
+    storage: 10Gi
   accessModes:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
   nfs:
-    server: 172.16.93.247  #这个就是nfs服务端的机器ip，也就是k8s的master1节点ip
-    path: /mnt/data/gitlab
+    server: 172.16.93.247
+    path: /mnt/data/k8s/gitlab
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -22,4 +22,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi

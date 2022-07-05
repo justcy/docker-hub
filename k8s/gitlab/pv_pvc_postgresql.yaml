@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: gitlab-pv
+  name: postgresql
 spec:
   capacity:
     storage: 5Gi
@@ -9,13 +9,13 @@ spec:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
   nfs:
-    server: 172.16.93.247  #这个就是nfs服务端的机器ip，也就是k8s的master1节点ip
-    path: /mnt/data/gitlab
+    server: 172.16.93.247
+    path: /mnt/data/k8s/postgresql
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: gitlab-pvc
+  name: postgresql-pvc
   namespace: devops
 spec:
   accessModes:
