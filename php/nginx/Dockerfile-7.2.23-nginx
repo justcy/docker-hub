@@ -1,0 +1,28 @@
+from php:7.2.23-fpm-alpine
+MAINTAINER justcy(https://github.com/justcy)
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update \
+&& apk add --no-cache ca-certificates tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+ENV REQUER="gnu-libiconv libpng-dev libmcrypt-dev libmemcached-dev libxml2-dev rabbitmq-c-dev freetype-dev libjpeg-turbo-dev libpng-dev"
+ENV ALPINE_TOOLS="libpng tzdata zlib-dev libxml2 $PHPIZE_DEPS libstdc++ curl-dev openssl-dev pcre-dev pcre2-dev"
+ENV PHP_EXT="pdo_mysql bcmath  mysqli shmop soap sockets xmlrpc zip pcntl"
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ $REQUER $ALPINE_TOOLS \
+    && addgroup www  \
+    && adduser -G www -D -s /sbin/nologin www  \
+    && apk add nginx \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install $PHP_EXT \
+    && docker-php-source extract \
+    && pecl install redis-5.0.2 \
+    && docker-php-ext-enable redis \
+    && apk del $ALPINE_TOOLS \
+    && curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY run.sh /usr/local/bin/
+COPY nginx.conf /etc/nginx/
+ADD default.conf /etc/nginx/conf.d/
+RUN chmod +x /usr/local/bin/run.sh && sed -i '/;open_basedir/s/;open_basedir =/open_basedir=\/var\/www\/html/g'  /usr/local/etc/php/php.ini
+ENTRYPOINT ["/usr/local/bin/run.sh"]
+EXPOSE  80
