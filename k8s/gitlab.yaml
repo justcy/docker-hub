@@ -38,7 +38,7 @@ spec:
         - name: gitlab-persistent-logs
           nfs:
             server: 172.16.93.247
-            path: /mnt/data/k8s/gitlab/logs   ## u01为nfs的共享目录
+            path: /mnt/data/k8s/gitlab/log   ## u01为nfs的共享目录
         - name: gitlab-persistent-data
           nfs:
             server: 172.16.93.247
