@@ -19,3 +19,6 @@ php:
 .PHONY: php-swoole
 php-swoole:
 	$(call build_image,php,Dockerfile-swoole4.6.1-php7.4,7.4.27-swoole)
+.PHONY: beanstalkd
+beanstalkd:
+	$(call build_image,beanstalkd,Dockerfile,1.13)
