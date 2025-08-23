@@ -1,4 +1,4 @@
-from php:7.4.27-fpm-alpine
+from php:7.4.33-fpm-alpine
 MAINTAINER justcy(https://github.com/justcy)
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update \ 
 && apk add --no-cache ca-certificates tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
