@@ -15,7 +15,7 @@ endef
 
 .PHONY: php
 php:
-	$(call build_image,php,Dockerfile-7.4.27,7.4.27) 
+	$(call build_image,php,Dockerfile-7.4.33,7.4.33) 
 .PHONY: php-swoole
 php-swoole:
 	$(call build_image,php,Dockerfile-swoole4.6.1-php7.4,7.4.27-swoole)
