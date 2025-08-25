@@ -20,4 +20,5 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/co
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+ADD ./conf/php-fpm-www.conf /usr/local/etc/php-fpm.d/www.conf
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
